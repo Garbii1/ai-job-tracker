@@ -16,8 +16,7 @@ A full-stack web application designed to help job seekers organize their job sea
 *(Screenshots included below show the Login, Registration, Dashboard, and Add New Application pages)*
 
 **Login Page**
-![JobTracker AI Login Page](./images/login/jpeg)  
-*(Replace `<./path/to/your/login_screenshot.png>` with the actual path or URL to your image file in the repo)*
+![JobTracker AI Login Page](./images/login.jpeg)  
 
 **Registration Page**
 ![JobTracker AI Registration Page](./images/registration.jpeg)
