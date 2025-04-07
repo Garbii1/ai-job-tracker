@@ -30,7 +30,7 @@
  // Validation rules for creating/updating application (example)
  const validateApplication = [
      body('companyName', 'Company name is required').not().isEmpty().trim().escape(),
-     body('position', 'Position is required').not().isEmpty().trim().escape(),
+     body('position', 'Position is required').not().isEmpty().trim(),
      body('status', 'Status is required').isIn([
          'Wishlist', 'Applied', 'Interviewing', 'Offer Received', 'Rejected', 'Withdrawn'
      ]),
