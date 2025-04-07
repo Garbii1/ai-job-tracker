@@ -35,7 +35,7 @@
          'Wishlist', 'Applied', 'Interviewing', 'Offer Received', 'Rejected', 'Withdrawn'
      ]),
      // Add more validations as needed (e.g., isDate for dates if required)
-     body('notes').optional().trim().escape(),
+     body('notes').optional().trim(),
      body('jobDescription').optional().trim(), // Don't escape job desc for AI
      body('applicationLink').optional().isURL().withMessage('Please provide a valid URL'),
      body('applicationMethod').optional().trim().escape(),

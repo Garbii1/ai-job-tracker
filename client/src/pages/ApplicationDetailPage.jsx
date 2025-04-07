@@ -16,6 +16,7 @@ import {
     FaInfoCircle, FaLightbulb, FaCalendarCheck, FaPaperPlane, FaBrain,
     FaClock, FaBriefcase, FaMapMarkerAlt, FaCheckCircle, FaTimesCircle
 } from 'react-icons/fa'; // Import necessary icons
+import he from 'he'; // <--- Import the 'he' library
 
 // Helper to format dates nicely (e.g., "January 1, 2024")
 const formatDate = (dateString) => {
@@ -270,7 +271,7 @@ function ApplicationDetailPage() {
                     <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
                         <h4><FaInfoCircle /> Notes:</h4>
                         <pre className="notes-block" style={{ whiteSpace: 'pre-wrap', background: '#fff9e6', padding: '15px', borderRadius: '4px', border: '1px solid var(--border-color)', fontSize: '0.9em' }}>
-                            {application.notes}
+                            {he.decode(application.notes || '')} {/* <--- Use he.decode() */}
                         </pre>
                     </div>
                 )}
