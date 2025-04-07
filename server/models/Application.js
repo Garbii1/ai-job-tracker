@@ -45,8 +45,10 @@
    // Store basic info about uploaded files, not the files themselves in mongo (for free tier)
    // Actual file storage needs a separate solution (like Cloudinary or S3) for production
    // Or link to files stored locally if only for dev/local use
-   resumeFilename: { type: String },
-   coverLetterFilename: { type: String },
+   resumeUrl: { type: String, trim: true }, // URL from Cloudinary
+   resumePublicId: { type: String, trim: true }, // Public ID for deletion from Cloudinary
+   coverLetterUrl: { type: String, trim: true }, // URL from Cloudinary
+   coverLetterPublicId: { type: String, trim: true }, // Public ID for deletion from Cloudinary
    // Reminder functionality
    followUpDate: {
      type: Date,
