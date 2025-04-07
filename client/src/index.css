@@ -1,0 +1,191 @@
+ /* client/src/index.css */
+ :root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --light-bg: #f8f9fa;
+  --dark-text: #343a40;
+  --light-text: #f8f9fa;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --border-radius: 0.3rem;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--light-bg);
+  color: var(--dark-text);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 2rem auto;
+  padding: 0 15px;
+}
+
+/* Basic Button Styling */
+button, .button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin: 0.3rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  vertical-align: middle; /* Align icons and text */
+}
+button:hover, .button:hover {
+  background-color: #0056b3;
+}
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+button.danger, .button.danger { background-color: var(--danger-color); }
+button.danger:hover, .button.danger:hover { background-color: #c82333; }
+button.secondary, .button.secondary { background-color: var(--secondary-color); }
+button.secondary:hover, .button.secondary:hover { background-color: #5a6268; }
+
+
+/* Basic Form Styling */
+form {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 1.5rem;
+  max-width: 700px; /* Limit form width */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="date"],
+form input[type="url"],
+form input[type="file"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* Alerts/Messages */
+.alert {
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+}
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+ .alert-info {
+     color: #0c5460;
+     background-color: #d1ecf1;
+     border-color: #bee5eb;
+ }
+
+
+/* Basic Card for dashboard items */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--box-shadow);
+}
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.card p {
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+.card strong {
+   color: var(--dark-text);
+}
+
+/* Navbar basic style */
+nav {
+    background-color: var(--dark-text);
+    padding: 0.8rem 0;
+    color: var(--light-text);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+nav .container {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-top: 0;
+     margin-bottom: 0;
+}
+
+nav a {
+    color: var(--light-text);
+    margin: 0 1rem;
+    text-decoration: none;
+    font-size: 1rem;
+}
+nav a:hover {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+ nav a.brand {
+    font-size: 1.4rem;
+    font-weight: bold;
+ }
+ nav button {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+ }
+ nav button:hover {
+    background-color: #c82333;
+ }
