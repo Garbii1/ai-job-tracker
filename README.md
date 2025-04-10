@@ -179,7 +179,7 @@ This application is deployed using free tiers:
 *   **API Key Security:** Faced GitHub Push Protection blocks due to accidentally committing secrets.
     *   **Solution:** Ensured `.env` files were correctly added to `.gitignore`, removed tracked secrets using `git rm --cached`, amended the commit history (`git commit --amend`) before pushing, revoked the exposed keys, and relied on secure environment variable management on Render.
 *   **AI Integration Limits:** Hit OpenAI API quota limits (`429` errors) after exhausting free trial credits.
-    *   **Solution:** Added billing to OpenAI account with strict usage limits for continued functionality OR acknowledged the limitation in documentation for the free demo. Implemented error handling in the frontend to display quota-related messages from the backend.
+    *   **Solution:** Acknowledged the limitation in documentation for the free demo. Implemented error handling in the frontend to display quota-related messages from the backend.
 *   **Deployment Configuration:** Required careful setup of Root Directories (`server` for Render, `client` for Vercel) and environment variables (`CLIENT_URL`, `VITE_API_BASE_URL`) for proper communication between the deployed frontend and backend.
     *   **Solution:** Followed platform documentation, set correct Root Directories, configured CORS on the backend via `CLIENT_URL`, and pointed the frontend to the backend API via `VITE_API_BASE_URL`. Debugged `npm start` script issues on Render.
 *   **Module/Import Errors:** Encountered `TypeError` and `ReferenceError` due to incorrect `module.exports` / `import` syntax or definition order.
