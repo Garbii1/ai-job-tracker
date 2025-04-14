@@ -2,23 +2,15 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom'; // Use NavLink for active styling
 import {
-    FaSignOutAlt,   // Logout icon
-    FaUserPlus,     // Register icon
-    FaSignInAlt,    // Login icon
-    FaTachometerAlt,// Dashboard icon
-    FaPlusCircle,   // Add Application icon
-    FaBriefcase     // Brand icon (optional)
-} from 'react-icons/fa'; // Import all icons used
+    FaSignOutAlt, FaUserPlus, FaSignInAlt, FaTachometerAlt, FaPlusCircle, FaBriefcase
+} from 'react-icons/fa';
 
-// Navbar component definition
-// It receives 'user' (object or null) and 'onLogout' (function) as props from App.jsx
 function Navbar({ user, onLogout }) {
 
-  // Style for active NavLink (optional, can also be done purely with CSS)
+  // Optional: Define active style object or rely purely on CSS .active class
   const activeStyle = {
-    fontWeight: 'bold',
-    // textDecoration: 'underline', // Example styling
-    color: '#5bc0de' // Example active color
+    // fontWeight: 'bold', // Handled by CSS potentially
+    // color: '#61dafb'
   };
 
   return (
@@ -26,12 +18,19 @@ function Navbar({ user, onLogout }) {
       <div className="container"> {/* Centers content */}
 
         {/* Brand/Logo Link */}
-        <Link to={user ? "/dashboard" : "/"} className="brand"> {/* Link to dashboard if logged in, else home/login */}
-          <FaBriefcase style={{ marginRight: '8px' }} /> JobTracker AI
+        <Link to={user ? "/dashboard" : "/"} className="brand">
+          {/* Logo Image */}
+          <img
+            src="/" // UPDATE if using a different filename/extension in /public
+            alt=""
+            // Style adjusted slightly via CSS base styles now
+          />
+          {/* App Name Text */}
+          <span style={{ fontWeight: 'bold', fontSize: '1.1em', marginLeft: '8px' }}>JobTracker AI</span>
         </Link>
 
-        {/* Navigation Links Section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {/* Navigation Links Section - Added className="nav-links" */}
+        <div className="nav-links">
 
           {/* Conditional Rendering based on user prop */}
           {user ? (
@@ -39,25 +38,27 @@ function Navbar({ user, onLogout }) {
             <>
               <NavLink
                 to="/dashboard"
-                style={({ isActive }) => isActive ? activeStyle : undefined}
+                className={({ isActive }) => isActive ? 'active' : ''} // Use className for active state
+                style={activeStyle} // Optional inline style override
               >
                 <FaTachometerAlt style={{ marginRight: '5px' }} /> Dashboard
               </NavLink>
 
               <NavLink
                 to="/add-application"
-                style={({ isActive }) => isActive ? activeStyle : undefined}
+                className={({ isActive }) => isActive ? 'active' : ''}
+                style={activeStyle}
               >
                 <FaPlusCircle style={{ marginRight: '5px' }} /> Add App
               </NavLink>
 
-              {/* Display user's name */}
-              <span style={{ fontStyle: 'italic', opacity: 0.9 }}>
+              {/* Display user's name - Added className="user-greeting" */}
+              <span className="user-greeting">
                 Hi, {user.name}!
               </span>
 
               {/* Logout Button */}
-              <button onClick={onLogout} title="Logout" className="button danger small"> {/* Added 'small' class if you want specific button size */}
+              <button onClick={onLogout} title="Logout" className="button danger"> {/* Use button classes */}
                  <FaSignOutAlt /> Logout
               </button>
             </>
@@ -66,13 +67,15 @@ function Navbar({ user, onLogout }) {
             <>
               <NavLink
                 to="/login"
-                style={({ isActive }) => isActive ? activeStyle : undefined}
+                 className={({ isActive }) => isActive ? 'active' : ''}
+                 style={activeStyle}
               >
                 <FaSignInAlt style={{ marginRight: '5px' }} /> Login
               </NavLink>
               <NavLink
                 to="/register"
-                style={({ isActive }) => isActive ? activeStyle : undefined}
+                 className={({ isActive }) => isActive ? 'active' : ''}
+                 style={activeStyle}
               >
                 <FaUserPlus style={{ marginRight: '5px' }} /> Register
               </NavLink>
@@ -85,5 +88,4 @@ function Navbar({ user, onLogout }) {
   );
 }
 
-// Default export is crucial for the import in App.jsx
 export default Navbar;
