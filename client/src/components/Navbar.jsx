@@ -21,7 +21,7 @@ function Navbar({ user, onLogout }) {
         <Link to={user ? "/dashboard" : "/"} className="brand">
           {/* Logo Image */}
           <img
-            src="/" // UPDATE if using a different filename/extension in /public
+            src="/logo.png" // UPDATE if using a different filename/extension in /public
             alt=""
             // Style adjusted slightly via CSS base styles now
           />
