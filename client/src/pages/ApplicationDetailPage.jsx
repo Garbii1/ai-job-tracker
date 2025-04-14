@@ -4,25 +4,27 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
     getApplicationById,
     deleteApplication,
-    generateAICoverLetter,
+    generateAICoverLetter, // Assuming function names in apiService
     analyzeAIApplicationFit,
     suggestAIFollowUp
 } from '../services/apiService'; // Adjust path if needed
-import Spinner from '../components/Spinner'; // Adjust path if needed
+import Spinner from '../components/Spinner'; // Ensure Spinner component exists and path is correct
 import ReactMarkdown from 'react-markdown'; // Renders Markdown text from AI
-import he from 'he'; // For decoding HTML entities in notes
+// Install if needed: npm install react-markdown
 import {
     FaEdit, FaTrashAlt, FaArrowLeft, FaFileAlt, FaLink, FaTags,
     FaInfoCircle, FaLightbulb, FaCalendarCheck, FaPaperPlane, FaBrain,
     FaClock, FaBriefcase, FaCheckCircle, FaTimesCircle, FaExclamationTriangle
-} from 'react-icons/fa';
+} from 'react-icons/fa'; // Import necessary icons
+import he from 'he'; // Import 'he' library for HTML entity decoding (for notes field)
 
-// Helper function to format dates consistently
+// Helper function to format dates consistently (e.g., "January 1, 2024")
 const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
         const date = new Date(dateString);
-        date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Adjust for local timezone display
+        // Adjust for timezone offset to display the intended local date
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
         return date.toLocaleDateString('en-US', {
             year: 'numeric', month: 'long', day: 'numeric'
         });
@@ -35,6 +37,7 @@ const formatDate = (dateString) => {
 // Reusable Component for displaying AI feature results
 const AIResultDisplay = ({ title, icon, resultState, onGenerate, canGenerate = true, generationDisabledReason = "(Requires Job Description)" }) => {
     const { loading, error, content } = resultState;
+
     return (
         <div className="card ai-feature" style={{ marginTop: '1rem', background: '#f0f8ff', border: '1px dashed var(--primary-color)' }}>
             <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>{icon} {title}</h4>
@@ -57,7 +60,12 @@ const AIResultDisplay = ({ title, icon, resultState, onGenerate, canGenerate = t
             )}
             {!loading && (
                 <div style={{ marginTop: '1rem', textAlign: 'right' }}>
-                    <button onClick={onGenerate} disabled={loading || !canGenerate} className="button secondary" title={!canGenerate ? generationDisabledReason : (content ? `Regenerate ${title}`: `Generate ${title}`)}>
+                    <button
+                        onClick={onGenerate}
+                        disabled={loading || !canGenerate}
+                        className="button secondary"
+                        title={!canGenerate ? generationDisabledReason : (content ? `Regenerate ${title}`: `Generate ${title}`)}
+                    >
                         {content ? 'Regenerate' : 'Generate'}
                     </button>
                     {!canGenerate && !content && <small style={{ marginLeft: '10px', color: 'gray' }}> {generationDisabledReason}</small>}
@@ -70,49 +78,60 @@ const AIResultDisplay = ({ title, icon, resultState, onGenerate, canGenerate = t
 
 // Main Detail Page Component
 function ApplicationDetailPage() {
-    const [application, setApplication] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [deleteLoading, setDeleteLoading] = useState(false);
-    const [error, setError] = useState('');
-    const { id } = useParams();
-    const navigate = useNavigate();
+    // State variables
+    const [application, setApplication] = useState(null); // Holds the fetched application data
+    const [loading, setLoading] = useState(true); // Loading state for fetching the application
+    const [deleteLoading, setDeleteLoading] = useState(false); // Loading state for delete operation
+    const [error, setError] = useState(''); // Error message state
 
+    // State for AI features { loading, error, content }
     const [aiCoverLetter, setAiCoverLetter] = useState({ loading: false, error: null, content: null });
     const [aiAnalysis, setAiAnalysis] = useState({ loading: false, error: null, content: null });
     const [aiFollowUp, setAiFollowUp] = useState({ loading: false, error: null, content: null });
 
+    // React Router hooks
+    const { id } = useParams(); // Get application ID from the URL parameters
+    const navigate = useNavigate(); // Hook for programmatic navigation
+
+    // Fetch application data using useCallback and useEffect
     const fetchApplication = useCallback(async () => {
         console.log(`Fetching application with ID: ${id}`);
         setLoading(true);
-        setError('');
+        setError(''); // Clear previous errors
         try {
-            const response = await getApplicationById(id);
-            setApplication(response.data);
+            const response = await getApplicationById(id); // Call API service
+            setApplication(response.data); // Store fetched data in state
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to load application details.');
+            const errorMsg = err.response?.data?.message || 'Failed to load application details.';
+            setError(errorMsg);
             console.error("Load detail error:", err.response || err);
-            setApplication(null);
+            setApplication(null); // Ensure application is null on error
         } finally {
-            setLoading(false);
+            setLoading(false); // Stop loading indicator
         }
-    }, [id]);
+    }, [id]); // Dependency array: re-run if ID changes
 
     useEffect(() => {
-        fetchApplication();
-    }, [fetchApplication]);
+        fetchApplication(); // Fetch data when component mounts or ID changes
+    }, [fetchApplication]); // Dependency on the memoized fetch function
 
+    // Handler function for deleting the application
     const handleDelete = async () => {
+        // Confirmation dialog
         if (window.confirm('Are you sure you want to permanently delete this application and associated files? This action cannot be undone.')) {
             setDeleteLoading(true);
             setError('');
             try {
-                await deleteApplication(id);
+                await deleteApplication(id); // Call API service
+                // Redirect to dashboard after successful deletion
                 navigate('/dashboard', { replace: true, state: { message: 'Application deleted successfully.' } });
             } catch (err) {
-                setError(err.response?.data?.message || 'Failed to delete application.');
+                const errorMsg = err.response?.data?.message || 'Failed to delete application.';
+                setError(errorMsg); // Show error message
                 console.error("Delete error:", err.response || err);
-                setDeleteLoading(false);
+                setDeleteLoading(false); // Stop delete loading indicator on error
             }
+            // No need to setDeleteLoading(false) on success because we navigate away
         }
     };
 
@@ -121,28 +140,47 @@ function ApplicationDetailPage() {
         if (!application?.jobDescription) return;
         setAiCoverLetter({ loading: true, error: null, content: null });
         try {
-            const response = await generateAICoverLetter({ jobDescription: application.jobDescription, companyName: application.companyName, position: application.position });
+            const response = await generateAICoverLetter({
+                jobDescription: application.jobDescription,
+                companyName: application.companyName,
+                position: application.position,
+            });
             setAiCoverLetter({ loading: false, error: null, content: response.data.coverLetter });
         } catch (err) {
             setAiCoverLetter({ loading: false, error: err.response?.data?.message || 'Failed to generate.', content: null });
             console.error("AI Cover Letter error:", err.response?.data?.message || err);
         }
     };
+
     const handleAnalyzeApplication = async () => {
         if (!application?.jobDescription) return;
         setAiAnalysis({ loading: true, error: null, content: null });
         try {
-            const response = await analyzeAIApplicationFit({ jobDescription: application.jobDescription, requiredExperience: application.requiredExperience, keywords: application.keywords, notes: application.notes });
+            const response = await analyzeAIApplicationFit({
+                jobDescription: application.jobDescription,
+                requiredExperience: application.requiredExperience,
+                keywords: application.keywords,
+                notes: application.notes,
+            });
             setAiAnalysis({ loading: false, error: null, content: response.data.analysis });
         } catch (err) {
             setAiAnalysis({ loading: false, error: err.response?.data?.message || 'Failed to analyze.', content: null });
             console.error("AI Analysis error:", err.response?.data?.message || err);
         }
     };
+
     const handleSuggestFollowUp = async () => {
         setAiFollowUp({ loading: true, error: null, content: null });
         try {
-            const response = await suggestAIFollowUp({ status: application.status, applicationDate: application.applicationDate, followUpDate: application.followUpDate, interviewDate: application.interviewDate, position: application.position, companyName: application.companyName, updatedAt: application.updatedAt });
+            const response = await suggestAIFollowUp({
+                status: application.status,
+                applicationDate: application.applicationDate,
+                followUpDate: application.followUpDate,
+                interviewDate: application.interviewDate,
+                position: application.position,
+                companyName: application.companyName,
+                updatedAt: application.updatedAt
+            });
             setAiFollowUp({ loading: false, error: null, content: response.data.suggestion });
         } catch (err) {
             setAiFollowUp({ loading: false, error: err.response?.data?.message || 'Failed to suggest follow-up.', content: null });
@@ -150,32 +188,40 @@ function ApplicationDetailPage() {
         }
     };
 
-    // --- Cloudinary File Link Logic ---
+    // --- *** UPDATED Cloudinary File Link Logic *** ---
+    // Directly use the URLs stored in the application data object
     const resumeLink = application?.resumeUrl;
     const coverLetterLink = application?.coverLetterUrl;
+    // --- *** End Update *** ---
 
-    // --- Render Logic ---
-    if (loading) return <Spinner />;
-    if (error) return (
-        <div className="container">
-            <p className="alert alert-danger"><FaExclamationTriangle /> {error}</p>
-            <Link to="/dashboard" className="button secondary"><FaArrowLeft /> Back</Link>
-        </div>
-    );
-    if (!application) return (
-        <div className="container">
-            <p className="alert alert-warning">Application data not found.</p>
-            <Link to="/dashboard" className="button secondary"><FaArrowLeft /> Back</Link>
-        </div>
-    );
+    // --- Conditional Rendering ---
+    if (loading) {
+        return <Spinner />;
+    }
+    if (error) {
+        return (
+            <div className="container">
+                <p className="alert alert-danger"><FaExclamationTriangle /> {error}</p>
+                <Link to="/dashboard" className="button secondary"><FaArrowLeft /> Back to Dashboard</Link>
+            </div>
+        );
+    }
+    if (!application) {
+        return (
+            <div className="container">
+                <p className="alert alert-warning">Application data not found.</p>
+                <Link to="/dashboard" className="button secondary"><FaArrowLeft /> Back to Dashboard</Link>
+            </div>
+        );
+    }
 
+    // --- Main Component Render Output ---
     return (
-        // Container class is applied in App.jsx for this route
         <div>
             {/* Top Action Bar */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
                 <Link to="/dashboard" className="button secondary" title="Go back to the dashboard">
-                    <FaArrowLeft /> Back
+                    <FaArrowLeft /> Back to Dashboard
                 </Link>
                 <div>
                     <Link to={`/edit-application/${id}`} className="button" style={{ marginRight: '0.5rem' }} title="Edit this application">
@@ -206,7 +252,7 @@ function ApplicationDetailPage() {
                     {application.keywords?.length > 0 && <p style={{ gridColumn: '1 / -1' }}><FaTags style={{ marginRight: '5px' }} /> <strong>Keywords:</strong> {application.keywords.join(', ')}</p>}
                 </div>
 
-                 {/* Documents Section - Using Cloudinary URLs */}
+                 {/* --- *** UPDATED Documents Section *** --- */}
                  <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
                     <h4><FaFileAlt /> Documents</h4>
                     <ul style={{ listStyle: 'none', paddingLeft: '1rem' }}>
@@ -230,12 +276,14 @@ function ApplicationDetailPage() {
                         </li>
                     </ul>
                 </div>
+                 {/* --- *** End Update *** --- */}
+
 
                 {/* Job Description Section */}
                 {application.jobDescription && (
                     <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
                         <h4>Job Description:</h4>
-                        <pre>
+                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', background: '#f8f9fa', padding: '15px', borderRadius: '4px', maxHeight: '300px', overflowY: 'auto', border: '1px solid var(--border-color)', fontSize: '0.9em', fontFamily: 'inherit' }}>
                             {application.jobDescription}
                         </pre>
                     </div>
@@ -245,7 +293,7 @@ function ApplicationDetailPage() {
                 {application.notes && (
                     <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
                         <h4><FaInfoCircle /> Notes:</h4>
-                        <pre>
+                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', background: '#fff9e6', padding: '15px', borderRadius: '4px', border: '1px solid var(--border-color)', fontSize: '0.9em', fontFamily: 'inherit' }}>
                              {/* Decode HTML entities from notes before rendering */}
                              {he.decode(application.notes || '')}
                         </pre>
@@ -257,20 +305,30 @@ function ApplicationDetailPage() {
             {/* AI Assistance Section */}
             <section style={{ marginTop: '2rem', padding: '1.5rem', background: '#e7f5ff', borderRadius: 'var(--border-radius)', border: '1px solid #bce0ff' }}>
                 <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--primary-color)' }}>✨ AI Assistance ✨</h2>
-                 {/* Add ai-results-grid class for responsive layout */}
-                <div className="ai-results-grid">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+
                     <AIResultDisplay
-                        title="Cover Letter Draft" icon={<FaPaperPlane />} resultState={aiCoverLetter}
-                        onGenerate={handleGenerateCoverLetter} canGenerate={!!application.jobDescription}
+                        title="Cover Letter Draft"
+                        icon={<FaPaperPlane />}
+                        resultState={aiCoverLetter}
+                        onGenerate={handleGenerateCoverLetter}
+                        canGenerate={!!application.jobDescription}
                         generationDisabledReason="(Job Description required)"
                     />
+
                     <AIResultDisplay
-                        title="Application Analysis & Tips" icon={<FaBrain />} resultState={aiAnalysis}
-                        onGenerate={handleAnalyzeApplication} canGenerate={!!application.jobDescription}
+                        title="Application Analysis & Tips"
+                        icon={<FaBrain />}
+                        resultState={aiAnalysis}
+                        onGenerate={handleAnalyzeApplication}
+                        canGenerate={!!application.jobDescription}
                         generationDisabledReason="(Job Description required)"
                     />
+
                     <AIResultDisplay
-                        title="Follow-up Suggestion" icon={<FaLightbulb />} resultState={aiFollowUp}
+                        title="Follow-up Suggestion"
+                        icon={<FaLightbulb />}
+                        resultState={aiFollowUp}
                         onGenerate={handleSuggestFollowUp}
                     />
                 </div>
