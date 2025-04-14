@@ -1,79 +1,153 @@
- /* client/src/index.css */
- :root {
+/* client/src/index.css */
+
+/* --- Variables and Basic Reset --- */
+:root {
   --primary-color: #007bff;
   --secondary-color: #6c757d;
   --success-color: #28a745;
   --danger-color: #dc3545;
   --warning-color: #ffc107;
+  --info-color: #17a2b8;
   --light-bg: #f8f9fa;
-  --dark-text: #343a40;
+  --dark-text: #212529; /* Darker text for better contrast */
   --light-text: #f8f9fa;
   --border-color: #dee2e6;
   --card-bg: #ffffff;
-  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --border-radius: 0.3rem;
+  --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  --border-radius: 0.375rem; /* Slightly larger radius */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Better box model */
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: var(--light-bg);
   color: var(--dark-text);
   line-height: 1.6;
+  font-size: 16px; /* Base font size */
 }
 
+main {
+  /* Add padding top to prevent content from hiding under a fixed navbar if needed */
+  /* padding-top: 70px; */ /* Example if navbar height is 70px and fixed */
+}
+
+/* --- Global Container (Mobile First) --- */
 .container {
-  max-width: 1140px;
-  margin: 2rem auto;
-  padding: 0 15px;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 1.5rem; /* Add default top/bottom margin */
+  margin-bottom: 1.5rem;
 }
 
-/* Basic Button Styling */
+/* --- Typography (Mobile First) --- */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+h1 { font-size: 2rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.5rem; }
+p { margin-bottom: 1rem; }
+a { color: var(--primary-color); text-decoration: none; }
+a:hover { text-decoration: underline; }
+em { font-style: italic; color: var(--secondary-color); }
+pre { /* Style for code blocks or notes */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background: #f4f4f4;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    font-size: 0.9em;
+    font-family: 'Courier New', Courier, monospace;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+
+/* --- Buttons (Mobile First) --- */
 button, .button {
-  display: inline-block;
-  padding: 0.5rem 1rem;
+  display: inline-flex; /* Use flex for easier icon alignment */
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* Space between icon and text */
+  padding: 0.6rem 1.2rem;
   margin: 0.3rem;
-  border: none;
+  border: 1px solid transparent; /* Add base border */
   border-radius: var(--border-radius);
   cursor: pointer;
   background-color: var(--primary-color);
   color: white;
   font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
   text-decoration: none;
-  transition: background-color 0.2s ease;
-  vertical-align: middle; /* Align icons and text */
+  vertical-align: middle;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap; /* Prevent button text wrapping */
 }
 button:hover, .button:hover {
-  background-color: #0056b3;
+  filter: brightness(90%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-button:disabled {
+button:disabled, .button:disabled {
   background-color: #cccccc;
+  border-color: #cccccc;
+  color: #666666;
   cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
 }
-button.danger, .button.danger { background-color: var(--danger-color); }
-button.danger:hover, .button.danger:hover { background-color: #c82333; }
-button.secondary, .button.secondary { background-color: var(--secondary-color); }
-button.secondary:hover, .button.secondary:hover { background-color: #5a6268; }
+button.danger, .button.danger { background-color: var(--danger-color); border-color: var(--danger-color); }
+/* Danger hover explicitly set */
+button.danger:hover:not(:disabled) { background-color: #c82333; border-color: #bd2130; filter: brightness(100%); }
+
+button.secondary, .button.secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); }
+button.secondary:hover:not(:disabled) { background-color: #5a6268; border-color: #545b62; filter: brightness(100%); }
+
+button.link-style { /* Button styled as a link */
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  padding: 0;
+  margin: 0;
+  text-decoration: underline;
+  box-shadow: none;
+  transform: none;
+}
+button.link-style:hover { filter: brightness(80%); }
 
 
-/* Basic Form Styling */
+/* --- Forms (Mobile First) --- */
 form {
   background-color: var(--card-bg);
-  padding: 2rem;
+  padding: 1.5rem; /* Slightly less padding on mobile */
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   margin-bottom: 1.5rem;
-  max-width: 700px; /* Limit form width */
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 100%; /* Allow form to take width, container handles max */
 }
-
+.form-group { /* Add a wrapper for label+input */
+    margin-bottom: 1rem;
+}
 form label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
+  font-size: 0.9rem;
 }
-
 form input[type="text"],
 form input[type="email"],
 form input[type="password"],
@@ -82,110 +156,233 @@ form input[type="url"],
 form input[type="file"],
 form select,
 form textarea {
+  display: block; /* Ensure they take full width */
   width: 100%;
-  padding: 0.6rem;
-  margin-bottom: 1rem;
+  padding: 0.75rem;
+  margin-bottom: 0.25rem; /* Reduce bottom margin, handled by form-group */
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 1rem;
-  box-sizing: border-box; /* Include padding in width */
+  line-height: 1.5;
+  background-color: #fff;
+  background-clip: padding-box;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+form input:focus, form select:focus, form textarea:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
 
 form textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
 }
-
-/* Links */
-a {
-    color: var(--primary-color);
-    text-decoration: none;
+form input[type="file"] {
+    padding: 0.4rem; /* Specific padding for file input */
 }
-a:hover {
-    text-decoration: underline;
-}
-
-/* Alerts/Messages */
-.alert {
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border: 1px solid transparent;
+form input[type="file"]::file-selector-button { /* Style the browse button */
+    padding: 0.6rem 1rem;
+    margin-right: 1rem;
+    border: none;
     border-radius: var(--border-radius);
+    background-color: var(--secondary-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+form input[type="file"]::file-selector-button:hover {
+    background-color: #5a6268;
 }
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
- .alert-info {
-     color: #0c5460;
-     background-color: #d1ecf1;
-     border-color: #bee5eb;
- }
 
 
-/* Basic Card for dashboard items */
+/* --- Cards (Mobile First) --- */
 .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    box-shadow: var(--box-shadow);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--box-shadow);
+  width: 100%; /* Take full width on mobile */
 }
-.card h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-}
-.card p {
-    margin-bottom: 0.5rem;
-    color: #555;
-    font-size: 0.95rem;
-}
-.card strong {
-   color: var(--dark-text);
-}
+.card h3 { margin-top: 0; margin-bottom: 0.5rem; }
+.card p { margin-bottom: 0.5rem; color: #555; font-size: 0.95rem; }
+.card strong { color: var(--dark-text); }
 
-/* Navbar basic style */
+/* --- Alerts --- */
+.alert {
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+}
+.alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+.alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+.alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
+.alert-warning { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+
+/* --- Navbar Styling (Mobile First) --- */
 nav {
-    background-color: var(--dark-text);
-    padding: 0.8rem 0;
-    color: var(--light-text);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: var(--dark-text);
+  padding: 0.5rem 0; /* Reduced padding on mobile */
+  color: var(--light-text);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky; /* Make navbar sticky */
+  top: 0;
+  z-index: 1000; /* Ensure it's above other content */
 }
 nav .container {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     margin-top: 0;
-     margin-bottom: 0;
+  display: flex;
+  justify-content: space-between; /* Space out brand and links */
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on very small screens */
+  gap: 0.5rem; /* Add gap for wrapped items */
+   /* Reset container margins for navbar */
+  margin-top: 0;
+  margin-bottom: 0;
+}
+nav .brand {
+  color: var(--light-text);
+  font-size: 1.2rem; /* Slightly smaller brand on mobile */
+  font-weight: bold;
+  display: inline-flex; /* Align logo and text */
+  align-items: center;
+  gap: 8px; /* Space between logo and text */
+  text-decoration: none;
+  padding: 0.3rem 0; /* Add some padding */
+}
+nav .brand img {
+    height: 30px; /* Adjust logo height */
+}
+nav .nav-links { /* Add a class to the div wrapping the links/buttons */
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Allow links to wrap if needed */
+    justify-content: center; /* Center wrapped items */
+    gap: 0.5rem; /* Space between links */
+    margin-top: 0.3rem; /* Add margin when wrapped */
+}
+nav a, nav button { /* Target links and buttons inside nav */
+    color: var(--light-text);
+    margin: 0 0.3rem; /* Reduced margin */
+    text-decoration: none;
+    font-size: 0.9rem; /* Smaller links on mobile */
+    padding: 0.4rem 0.6rem; /* Adjust padding */
+    display: inline-flex; /* Align icons */
+    align-items: center;
+    gap: 4px; /* Smaller gap for icons */
+    border-radius: var(--border-radius); /* Ensure buttons have radius */
+}
+nav a:hover, nav button:hover:not(:disabled) {
+    color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle hover background */
+    text-decoration: none;
+}
+nav a.active { /* Style for active NavLink */
+   font-weight: bold;
+   color: #61dafb; /* Example active color */
+}
+nav .user-greeting {
+    font-style: italic;
+    opacity: 0.9;
+    margin: 0 0.5rem;
+    font-size: 0.9rem;
+    display: none; /* Hide greeting on small screens by default */
+}
+nav button { /* Specific styles for buttons inside nav */
+    background-color: var(--secondary-color);
+    border: none;
+    color: white;
+}
+ nav button.danger { /* Logout button */
+    background-color: var(--danger-color);
+ }
+ nav button.danger:hover {
+     background-color: #c82333;
+ }
+
+/* --- Responsive Media Queries --- */
+
+/* Small Tablets and larger */
+@media (min-width: 576px) {
+    nav .container {
+        flex-wrap: nowrap; /* Prevent wrapping */
+    }
+    nav .nav-links {
+         margin-top: 0; /* Reset margin */
+         justify-content: flex-end; /* Align links to the right */
+    }
+     nav .user-greeting {
+         display: inline; /* Show greeting */
+     }
 }
 
-nav a {
-    color: var(--light-text);
-    margin: 0 1rem;
-    text-decoration: none;
-    font-size: 1rem;
+/* Tablets and larger */
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.75rem; }
+  form { padding: 2rem; }
+  nav { padding: 0.6rem 0; }
+  nav a, nav button { font-size: 1rem; margin: 0 0.5rem; padding: 0.5rem 0.8rem; }
+  nav .brand { font-size: 1.4rem; }
+  nav .brand img { height: 35px; }
+
+  /* Example: Two-column form grid on tablets+ */
+  .form-grid-layout { /* Add this class to the div wrapping form sections */
+       display: grid;
+       grid-template-columns: 1fr 1fr;
+       gap: 1.5rem;
+  }
 }
-nav a:hover {
-    color: var(--primary-color);
-    text-decoration: none;
+
+/* Desktops and larger */
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+  h1 { font-size: 2.5rem; }
 }
- nav a.brand {
-    font-size: 1.4rem;
-    font-weight: bold;
- }
- nav button {
-    background-color: var(--danger-color);
-    color: white;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
- }
- nav button:hover {
-    background-color: #c82333;
+
+/* Large Desktops and larger */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* Add specific component responsive styles below or in their own files */
+/* Example: Application Card Grid */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: 1fr; /* 1 column on mobile */
+    gap: 1rem;
+}
+@media (min-width: 768px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+        gap: 1.5rem;
+    }
+}
+ @media (min-width: 1200px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns on large screens */
+    }
+}
+
+/* Example: AI Results Grid */
+.ai-results-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+ @media (min-width: 992px) {
+     .ai-results-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible columns */
+     }
  }

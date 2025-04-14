@@ -1,133 +1,112 @@
- // client/src/App.jsx
- import React, { useState, useEffect, useCallback } from 'react';
- import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
- import { jwtDecode } from 'jwt-decode'; // Use named import
+// client/src/App.jsx
+import React, { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
- // Pages
- import LoginPage from './pages/LoginPage';
- import RegisterPage from './pages/RegisterPage';
- import DashboardPage from './pages/DashboardPage';
- import ApplicationFormPage from './pages/ApplicationFormPage';
- import ApplicationDetailPage from './pages/ApplicationDetailPage';
- import NotFoundPage from './pages/NotFoundPage';
+// Pages
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
+import ApplicationFormPage from './pages/ApplicationFormPage';
+import ApplicationDetailPage from './pages/ApplicationDetailPage';
+import NotFoundPage from './pages/NotFoundPage';
+import HomePage from './pages/HomePage'; // <-- Import HomePage
 
- // Components
- import Navbar from './components/Navbar'; // Create this component
- import ProtectedRoute from './components/ProtectedRoute'; // Create this component
- import PublicRoute from './components/PublicRoute'; // Create this component
- import Spinner from './components/Spinner'; // Create this component
+// Components
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
+import Spinner from './components/Spinner';
 
- // API
- import { getMe } from './services/apiService';
+// API & Auth
+import { getMe } from './services/apiService'; // Assuming this exists
+import { jwtDecode } from 'jwt-decode';
 
- // Main App Component
- function App() {
-   const [user, setUser] = useState(null); // Store user object or null
-   const [loading, setLoading] = useState(true); // Loading state for initial auth check
+function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-   // Function to check token validity and fetch user data
-   const checkAuth = useCallback(async () => {
-       const token = localStorage.getItem('token');
-       if (token) {
-           try {
-               const decoded = jwtDecode(token);
-               // Check token expiration (jwtDecode doesn't verify signature)
-               const isExpired = decoded.exp * 1000 < Date.now();
-               if (isExpired) {
-                   console.log('Token expired.');
-                   localStorage.removeItem('token');
-                   setUser(null);
-               } else {
-                   // Token exists and not expired (locally), fetch user data to verify on backend
-                   const userData = await getMe(); // This call will fail if token is invalid on backend
-                   setUser(userData.data); // Store user data
-                   console.log('User authenticated:', userData.data.email);
-               }
-           } catch (error) {
-               console.error('Auth check failed:', error.response?.data?.message || error.message);
-               localStorage.removeItem('token'); // Remove invalid token
-               setUser(null);
-               // Error handler in apiService might redirect, but handle here too if needed
-           }
-       } else {
-           setUser(null); // No token found
-       }
-       setLoading(false); // Finished auth check
-   }, []); // useCallback to memoize the function
+  const checkAuth = useCallback(async () => {
+      // ... (Your existing checkAuth logic) ...
+      // Ensure it sets user state correctly and setLoading(false)
+      const token = localStorage.getItem('token');
+      if (token) { /* ...verify token, fetch user... */ }
+      else { setUser(null); }
+      setLoading(false);
+  }, []);
 
-   // Run auth check on initial mount
-   useEffect(() => {
-     checkAuth();
-   }, [checkAuth]); // Re-run if checkAuth changes (it shouldn't due to useCallback)
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
-   // Function to handle logout
-   const handleLogout = () => {
-     localStorage.removeItem('token');
-     setUser(null);
-     // Navigate('/login'); // Navigation handled by route protection change
-     console.log('User logged out.');
-   };
+  const handleLogout = () => {
+      // ... (Your existing handleLogout logic) ...
+      localStorage.removeItem('token');
+      setUser(null);
+  };
 
-    // Function passed to login page to update user state
-   const handleLoginSuccess = async () => {
-       setLoading(true); // Show loading while fetching user data after login
-       await checkAuth(); // Refetch user data to update state
-   };
+  const handleLoginSuccess = async () => {
+      setLoading(true);
+      await checkAuth();
+  };
 
-   // Display loading spinner during initial auth check
-   if (loading) {
-     return <Spinner />;
-   }
+  if (loading) {
+    return <Spinner />;
+  }
 
-   // Render the application routes
-   return (
-     <Router>
-       <Navbar user={user} onLogout={handleLogout} />
-       <main className="container">
-         <Routes>
-           {/* Public Routes (accessible only when logged out) */}
-           <Route path="/login" element={
-             <PublicRoute isAuth={!!user}>
-               <LoginPage onLoginSuccess={handleLoginSuccess} />
-             </PublicRoute>
+  return (
+    <Router>
+      {/* Navbar rendered on all pages */}
+      <Navbar user={user} onLogout={handleLogout} />
+
+      {/* Use a wrapper for main content, but HomePage might bypass standard container */}
+      <main>
+        <Routes>
+          {/* --- Route for HomePage --- */}
+          {/* Render HomePage directly without the .container wrapper */}
+          <Route path="/" element={<HomePage />} />
+
+          {/* Public Routes (Login/Register) */}
+          {/* Wrap these pages in the standard container */}
+          <Route path="/login" element={
+            <PublicRoute isAuth={!!user}>
+              <div className="container"> <LoginPage onLoginSuccess={handleLoginSuccess} /> </div>
+            </PublicRoute>
+          }/>
+          <Route path="/register" element={
+            <PublicRoute isAuth={!!user}>
+               <div className="container"> <RegisterPage /> </div>
+            </PublicRoute>
            }/>
-           <Route path="/register" element={
-             <PublicRoute isAuth={!!user}>
-               <RegisterPage />
-             </PublicRoute>
-            }/>
 
-           {/* Protected Routes (accessible only when logged in) */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute isAuth={!!user}>
-                <DashboardPage user={user}/>
-              </ProtectedRoute>
-            }/>
-            <Route path="/add-application" element={
-              <ProtectedRoute isAuth={!!user}>
-                <ApplicationFormPage />
-              </ProtectedRoute>
-            }/>
-            <Route path="/edit-application/:id" element={
-              <ProtectedRoute isAuth={!!user}>
-                <ApplicationFormPage /> {/* Reuse form for editing */}
-              </ProtectedRoute>
-            }/>
-            <Route path="/application/:id" element={
-              <ProtectedRoute isAuth={!!user}>
-                <ApplicationDetailPage />
-              </ProtectedRoute>
-            }/>
+          {/* Protected Routes */}
+          {/* Wrap protected pages in the standard container */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute isAuth={!!user}>
+              <div className="container"><DashboardPage user={user}/></div>
+            </ProtectedRoute>
+          }/>
+          <Route path="/add-application" element={
+            <ProtectedRoute isAuth={!!user}>
+               <div className="container"><ApplicationFormPage /></div>
+            </ProtectedRoute>
+          }/>
+          <Route path="/edit-application/:id" element={
+            <ProtectedRoute isAuth={!!user}>
+               <div className="container"><ApplicationFormPage /></div>
+            </ProtectedRoute>
+          }/>
+          <Route path="/application/:id" element={
+            <ProtectedRoute isAuth={!!user}>
+              <div className="container"><ApplicationDetailPage /></div>
+            </ProtectedRoute>
+          }/>
 
-            {/* Redirect root path */}
-            <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
+          {/* Not Found Route */}
+          <Route path="*" element={<div className="container"><NotFoundPage /></div>} />
+        </Routes>
+      </main>
+    </Router>
+  );
+}
 
-            {/* Not Found Route */}
-            <Route path="*" element={<NotFoundPage />} />
-         </Routes>
-       </main>
-     </Router>
-   );
- }
-
- export default App;
+export default App;

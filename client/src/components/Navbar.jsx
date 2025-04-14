@@ -10,15 +10,12 @@ import {
     FaBriefcase     // Brand icon (optional)
 } from 'react-icons/fa'; // Import all icons used
 
-// Navbar component definition
-// It receives 'user' (object or null) and 'onLogout' (function) as props from App.jsx
 function Navbar({ user, onLogout }) {
 
-  // Style for active NavLink (optional, can also be done purely with CSS)
+  // Style for active NavLink (optional, can also be done purely with CSS class)
   const activeStyle = {
     fontWeight: 'bold',
-    // textDecoration: 'underline', // Example styling
-    color: '#5bc0de' // Example active color
+    color: '#61dafb' // Example active color - adjust as needed
   };
 
   return (
@@ -26,12 +23,19 @@ function Navbar({ user, onLogout }) {
       <div className="container"> {/* Centers content */}
 
         {/* Brand/Logo Link */}
-        <Link to={user ? "/dashboard" : "/"} className="brand"> {/* Link to dashboard if logged in, else home/login */}
-          <FaBriefcase style={{ marginRight: '8px' }} /> JobTracker AI
+        <Link to={user ? "/dashboard" : "/"} className="brand" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+          {/* Logo Image */}
+          <img
+            src="/logo.png" // UPDATE PATH if your logo is different (e.g., /logo.png) - relative to public/
+            alt="JobTracker AI" // Descriptive alt text
+            style={{ height: '35px', width: 'auto', verticalAlign: 'middle' }} // Adjust size
+          />
+          {/* Optional: Keep or remove text based on your logo design */}
+          {/* <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>JobTracker AI</span> */}
         </Link>
 
-        {/* Navigation Links Section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {/* Navigation Links Section - Add className="nav-links" */}
+        <div className="nav-links">
 
           {/* Conditional Rendering based on user prop */}
           {user ? (
@@ -51,13 +55,13 @@ function Navbar({ user, onLogout }) {
                 <FaPlusCircle style={{ marginRight: '5px' }} /> Add App
               </NavLink>
 
-              {/* Display user's name */}
-              <span style={{ fontStyle: 'italic', opacity: 0.9 }}>
+              {/* Display user's name - Add className="user-greeting" */}
+              <span className="user-greeting">
                 Hi, {user.name}!
               </span>
 
               {/* Logout Button */}
-              <button onClick={onLogout} title="Logout" className="button danger small"> {/* Added 'small' class if you want specific button size */}
+              <button onClick={onLogout} title="Logout" className="button danger"> {/* Use button classes from index.css */}
                  <FaSignOutAlt /> Logout
               </button>
             </>
