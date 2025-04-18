@@ -15,6 +15,7 @@
   --card-bg: #ffffff;
   --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   --border-radius: 0.375rem;
+  --navbar-height: 60px; /* Define navbar height for potential offsets */
 }
 
 /* --- Basic Reset --- */
@@ -26,15 +27,13 @@ body {
   background-color: var(--light-bg);
   color: var(--dark-text);
   line-height: 1.6;
-  font-size: 16px; /* Base font size */
-  /* Prevent horizontal scroll if negative margins cause issues */
-  /* overflow-x: hidden; */
+  font-size: 16px;
 }
 
 /* --- Main Content Area --- */
 main {
-  /* Adjust if using a fixed navbar */
-  /* padding-top: 70px; */
+  /* Add padding matching navbar height ONLY if navbar is position: fixed */
+  /* padding-top: var(--navbar-height); */
 }
 
 /* --- Global Container (Mobile First) --- */
@@ -50,154 +49,166 @@ main {
 
 /* --- Base Typography (Mobile First) --- */
 h1, h2, h3, h4, h5, h6 { margin-bottom: 0.75rem; font-weight: 600; line-height: 1.3; }
-h1 { font-size: 1.8rem; } /* Smaller H1 on mobile */
-h2 { font-size: 1.6rem; }
-h3 { font-size: 1.4rem; }
+h1 { font-size: 1.8rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.4rem; }
 p { margin-bottom: 1rem; }
-a { color: var(--primary-color); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a { color: var(--primary-color); text-decoration: none; } a:hover { text-decoration: underline; }
 em { font-style: italic; color: var(--secondary-color); }
-pre { /* For notes/code blocks */
-    white-space: pre-wrap; word-wrap: break-word; background: #f4f4f4;
-    padding: 15px; border-radius: var(--border-radius); border: 1px solid var(--border-color);
-    font-size: 0.9em; font-family: 'Courier New', Courier, monospace;
-    max-height: 350px; overflow-y: auto;
-}
-
+pre { white-space: pre-wrap; word-wrap: break-word; background: #f4f4f4; padding: 15px; border-radius: var(--border-radius); border: 1px solid var(--border-color); font-size: 0.9em; font-family: 'Courier New', Courier, monospace; max-height: 350px; overflow-y: auto; }
 
 /* --- Base Buttons (Mobile First) --- */
-button, .button {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-  padding: 0.6rem 1.2rem; margin: 0.3rem; border: 1px solid transparent;
-  border-radius: var(--border-radius); cursor: pointer; background-color: var(--primary-color);
-  color: white; font-size: 0.9rem; /* Slightly smaller font */ font-weight: 500; text-align: center;
-  text-decoration: none; vertical-align: middle; transition: all 0.2s ease-in-out;
-  white-space: nowrap;
-}
+button, .button { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.2rem; margin: 0.3rem; border: 1px solid transparent; border-radius: var(--border-radius); cursor: pointer; background-color: var(--primary-color); color: white; font-size: 0.9rem; font-weight: 500; text-align: center; text-decoration: none; vertical-align: middle; transition: all 0.2s ease-in-out; white-space: nowrap; }
 button:hover:not(:disabled), .button:hover:not(:disabled) { filter: brightness(90%); transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 button:disabled, .button:disabled { background-color: #cccccc; border-color: #cccccc; color: #666666; cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
-button.danger, .button.danger { background-color: var(--danger-color); border-color: var(--danger-color); }
-button.danger:hover:not(:disabled) { background-color: #c82333; border-color: #bd2130; filter: brightness(100%); }
-button.secondary, .button.secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); }
-button.secondary:hover:not(:disabled) { background-color: #5a6268; border-color: #545b62; filter: brightness(100%); }
+button.danger, .button.danger { background-color: var(--danger-color); border-color: var(--danger-color); } button.danger:hover:not(:disabled) { background-color: #c82333; border-color: #bd2130; filter: brightness(100%); }
+button.secondary, .button.secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); } button.secondary:hover:not(:disabled) { background-color: #5a6268; border-color: #545b62; filter: brightness(100%); }
 
 /* --- Base Forms (Mobile First) --- */
 form { background-color: var(--card-bg); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 1.5rem; max-width: 100%; }
 .form-group { margin-bottom: 1rem; }
 form label { display: block; margin-bottom: 0.5rem; font-weight: bold; font-size: 0.9rem; }
-form input[type="text"], form input[type="email"], form input[type="password"],
-form input[type="date"], form input[type="url"], form input[type="file"],
-form select, form textarea {
-  display: block; width: 100%; padding: 0.75rem; margin-bottom: 0.25rem;
-  border: 1px solid var(--border-color); border-radius: var(--border-radius);
-  font-size: 1rem; line-height: 1.5; background-color: #fff;
-  background-clip: padding-box; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
+form input[type="text"], form input[type="email"], form input[type="password"], form input[type="date"], form input[type="url"], form input[type="file"], form select, form textarea { display: block; width: 100%; padding: 0.75rem; margin-bottom: 0.25rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); font-size: 1rem; line-height: 1.5; background-color: #fff; background-clip: padding-box; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; }
 form input:focus, form select:focus, form textarea:focus { border-color: #80bdff; outline: 0; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); }
-form textarea { min-height: 120px; resize: vertical; }
-form input[type="file"] { padding: 0.4rem; }
-form input[type="file"]::file-selector-button { padding: 0.6rem 1rem; margin-right: 1rem; border: none; border-radius: var(--border-radius); background-color: var(--secondary-color); color: white; cursor: pointer; transition: background-color 0.2s ease; }
-form input[type="file"]::file-selector-button:hover { background-color: #5a6268; }
-fieldset { border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem; }
-legend { padding: 0 0.5rem; width: auto; font-weight: bold; }
-
+form textarea { min-height: 120px; resize: vertical; } form input[type="file"] { padding: 0.4rem; } form input[type="file"]::file-selector-button { padding: 0.6rem 1rem; margin-right: 1rem; border: none; border-radius: var(--border-radius); background-color: var(--secondary-color); color: white; cursor: pointer; transition: background-color 0.2s ease; } form input[type="file"]::file-selector-button:hover { background-color: #5a6268; }
+fieldset { border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem; } legend { padding: 0 0.5rem; width: auto; font-weight: bold; }
 
 /* --- Base Cards (Mobile First) --- */
 .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--box-shadow); width: 100%; }
-.card h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.25rem; } /* Slightly smaller card heading */
-.card p { margin-bottom: 0.5rem; color: #555; font-size: 0.9rem; } /* Smaller card text */
-.card strong { color: var(--dark-text); }
+.card h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.25rem; } .card p { margin-bottom: 0.5rem; color: #555; font-size: 0.9rem; } .card strong { color: var(--dark-text); }
 
 /* --- Base Alerts --- */
-.alert { padding: 0.8rem 1rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: var(--border-radius); font-size: 0.95rem; }
-.alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
-.alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
-.alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
-.alert-warning { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+.alert { padding: 0.8rem 1rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: var(--border-radius); font-size: 0.95rem; } .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; } .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; } .alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; } .alert-warning { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
 
-
-/* --- Navbar Mobile-First Styles --- */
+/* --- Navbar --- */
 nav {
   background-color: var(--dark-text); padding: 0.5rem 0; color: var(--light-text);
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
+  min-height: var(--navbar-height); /* Ensure navbar has a minimum height */
 }
-nav .container {
+nav .container { /* Use nav's container for positioning context */
   display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 0.5rem; padding: 0 15px; margin: 0 auto; width: 100%;
+  padding: 0 15px; margin: 0 auto; width: 100%; max-width: 1140px;
+  position: relative; /* Context for absolute positioned menu */
+  height: 100%;
 }
 nav .brand {
   color: var(--light-text); font-size: 1.1rem; font-weight: bold;
   display: inline-flex; align-items: center; gap: 8px;
-  text-decoration: none; padding: 0.3rem 0; flex-shrink: 0;
+  text-decoration: none; padding: 0.3rem 0; flex-shrink: 0; z-index: 1001;
 }
 nav .brand img { height: 30px; width: auto; vertical-align: middle; }
-nav .nav-links { /* Wrapper for nav items */
-    display: flex; align-items: center; flex-wrap: wrap;
-    justify-content: center; /* Center items when they wrap */
-    gap: 0.3rem 0.5rem; margin-top: 0.3rem;
-    flex-grow: 1; min-width: 0; /* Allow wrapping */
+
+/* --- Burger Button (Shown Only on Mobile) --- */
+.burger-button {
+  display: none; /* Hidden on desktop by default */
+  background: none; border: none; color: var(--light-text);
+  font-size: 1.6rem; /* Make icon slightly larger */
+  cursor: pointer; padding: 0.5rem; margin-left: auto; /* Push to right if needed */
+  z-index: 1001; /* Above potential overlay */
 }
-/* Target only direct children links/buttons of nav-links */
-nav .nav-links > a, nav .nav-links > button, nav .nav-links > span {
-    color: var(--light-text); margin: 0 0.1rem; text-decoration: none;
-    font-size: 0.85rem; padding: 0.4rem 0.5rem; display: inline-flex;
-    align-items: center; gap: 4px; border-radius: var(--border-radius);
-    transition: background-color 0.2s ease; white-space: nowrap;
+
+/* --- Nav Links Container --- */
+.nav-links {
+  display: flex; /* Horizontal layout by default (desktop) */
+  align-items: center;
+  gap: 0.3rem 0.5rem; /* Default gap for desktop */
 }
-nav .nav-links > a:hover, nav .nav-links > button:hover:not(:disabled) {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--light-text);
+/* Default styles for links/buttons inside horizontal nav */
+.nav-links > a, .nav-links > button, .nav-links > span {
+  color: var(--light-text); margin: 0 0.3rem; text-decoration: none;
+  font-size: 0.95rem; padding: 0.4rem 0.7rem; display: inline-flex;
+  align-items: center; gap: 5px; border-radius: var(--border-radius);
+  transition: background-color 0.2s ease; white-space: nowrap;
 }
-nav .nav-links > a.active { font-weight: bold; color: #61dafb; }
-nav .user-greeting { display: none; /* Hide on smallest screens */ }
-nav .nav-links > button { background-color: var(--secondary-color); border: none; color: white; }
-nav .nav-links > button.danger { background-color: var(--danger-color); }
-nav .nav-links > button.danger:hover:not(:disabled) { background-color: #c82333; }
+.nav-links > a:hover, .nav-links > button:hover:not(:disabled) { background-color: rgba(255, 255, 255, 0.1); color: var(--light-text); }
+.nav-links > a.active { font-weight: bold; color: #61dafb; }
+.nav-links > .user-greeting { display: inline; margin: 0 0.5rem; font-size: 0.9rem; font-style: italic; opacity: 0.9;}
+.nav-links > button { background-color: var(--secondary-color); border: none; color: white; }
+.nav-links > button.danger { background-color: var(--danger-color); }
+.nav-links > button.danger:hover:not(:disabled) { background-color: #c82333; }
 
 
 /* ================================================= */
-/* =========== RESPONSIVE MEDIA QUERIES ============ */
+/* =========== RESPONSIVE OVERRIDES ================ */
 /* ================================================= */
 
-/* --- Small Tablets and Larger (>= 576px) --- */
-@media (min-width: 576px) {
-    nav .container { flex-wrap: nowrap; } /* Prevent navbar wrapping */
-    nav .nav-links { width: auto; justify-content: flex-end; margin-top: 0; } /* Align right */
-    nav .user-greeting { display: inline; margin: 0 0.5rem; font-size: 0.9rem; } /* Show greeting */
-    nav .nav-links > a, nav .nav-links > button { font-size: 0.9rem; padding: 0.4rem 0.7rem; margin: 0 0.3rem; }
-    nav .brand { font-size: 1.2rem; }
+/* --- Mobile Styles (Screens BELOW the breakpoint, e.g., < 768px) --- */
+@media (max-width: 767.98px) {
+  .burger-button {
+    display: inline-flex; /* SHOW the burger button */
+  }
+
+  .nav-links {
+    display: none; /* Hide the link container by default on mobile */
+    /* Styles for when it's OPEN on mobile (applied by .mobile-menu-open) */
+  }
+
+  .nav-links.mobile-menu-open {
+    display: flex; /* Show the container when open */
+    flex-direction: column; /* Stack links vertically */
+    position: absolute; /* Position below navbar */
+    top: 100%; /* Start right below the navbar container */
+    left: 0;
+    right: 0;
+    background-color: var(--dark-text); /* Match navbar */
+    padding: 1rem; /* Padding inside the dropdown */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-top: 1px solid #444; /* Separator line */
+    z-index: 999;
+    gap: 0.5rem; /* Space between stacked links */
+    align-items: stretch; /* Make items stretch full width */
+  }
+
+  /* Styles for items INSIDE the OPEN Mobile Menu */
+  .nav-links.mobile-menu-open > a,
+  .nav-links.mobile-menu-open > button,
+  .nav-links.mobile-menu-open > span {
+    font-size: 1rem; /* Reset font size for mobile menu */
+    padding: 0.75rem 0.5rem; /* More vertical padding */
+    width: 100%; /* Full width */
+    text-align: left;
+    margin: 0; /* Reset horizontal margins */
+    justify-content: flex-start; /* Align icon/text left */
+  }
+  .nav-links.mobile-menu-open > .user-greeting {
+    display: block; /* Show greeting */
+    padding: 0.75rem 0.5rem; /* Match link padding */
+    font-style: italic;
+    opacity: 0.9;
+  }
+  .nav-links.mobile-menu-open > button {
+    background-color: var(--secondary-color); /* Reset background */
+    justify-content: flex-start;
+  }
+  .nav-links.mobile-menu-open > button.danger {
+    background-color: var(--danger-color);
+  }
 }
 
-/* --- Tablets and Larger (>= 768px) --- */
+
+/* --- Other Media Queries for general layout (Tablet and Up) --- */
+/* These should mostly remain the same as before, ensuring container widths */
+/* and grid layouts adjust correctly. */
+
 @media (min-width: 768px) {
   .container { max-width: 720px; padding-right: 20px; padding-left: 20px; }
   h1 { font-size: 2.25rem; } h2 { font-size: 2rem; } h3 { font-size: 1.75rem; }
   form { padding: 2rem; }
-  nav { padding: 0.6rem 0; }
+  nav { padding: 0.6rem 0; } /* Adjust navbar padding if needed */
   nav .brand { font-size: 1.4rem; } nav .brand img { height: 35px; }
-  nav .nav-links > a, nav .nav-links > button { font-size: 1rem; margin: 0 0.5rem; padding: 0.5rem 0.8rem; }
-  nav .user-greeting { margin: 0 0.75rem; font-size: 1rem; }
 
-  /* Layout Grids - Activate multi-column */
   .form-grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .dashboard-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
   .ai-results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
 }
 
-/* --- Desktops and Larger (>= 992px) --- */
 @media (min-width: 992px) {
   .container { max-width: 960px; }
   h1 { font-size: 2.5rem; }
-  .dashboard-cards { grid-template-columns: repeat(2, 1fr); } /* Keep 2 columns or change to 3 */
+  .dashboard-cards { /* grid-template-columns: repeat(3, 1fr); */ /* Optional 3 columns */ }
   .ai-results-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 }
 
-/* --- Large Desktops and Larger (>= 1200px) --- */
 @media (min-width: 1200px) {
   .container { max-width: 1140px; }
-  .dashboard-cards { grid-template-columns: repeat(3, 1fr); } /* 3 columns on very large screens */
+  .dashboard-cards { grid-template-columns: repeat(3, 1fr); }
 }
-
-/* --- Specific Component Adjustments --- */
-/* Add any specific overrides for components if needed */
-.ai-feature h4 { font-size: 1.1rem; } /* Example: Adjust AI card heading size */
