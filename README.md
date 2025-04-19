@@ -2,8 +2,6 @@
 
 A full-stack web application designed to help job seekers organize their job search, track applications, store documents securely via Cloudinary, and leverage AI-powered insights (OpenAI) to improve their strategy. Built with the MERN stack (MongoDB, Express, React, Node.js) and deployed using free-tier services.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 **Live Demo:** [https://ai-job-tracker-ten.vercel.app/](https://ai-job-tracker-ten.vercel.app/)
 **Backend API Hosted On:** Render (Free Tier)
 
@@ -24,12 +22,14 @@ A full-stack web application designed to help job seekers organize their job sea
 *   [Challenges Faced & Solutions](#challenges-faced--solutions)
 *   [Future Improvements](#future-improvements)
 *   [Author](#author)
+*   [License](#License)
 
 ---
 
 ## Screenshots
 
-*(Screenshots included below show the Login, Registration, Dashboard, and Add New Application pages)*
+**Home Page**
+![JobTracker AI Home Page](./images/home.jpeg)
 
 **Login Page**
 ![JobTracker AI Login Page](./images/login.jpeg)  
@@ -209,3 +209,8 @@ This application is deployed using free tiers:
 
 ---
 
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+---
