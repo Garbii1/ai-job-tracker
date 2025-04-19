@@ -4,6 +4,7 @@
  import { jwtDecode } from 'jwt-decode'; // Use named import
 
  // Pages
+ import HomePage from './pages/HomePage';
  import LoginPage from './pages/LoginPage';
  import RegisterPage from './pages/RegisterPage';
  import DashboardPage from './pages/DashboardPage';
@@ -81,53 +82,27 @@
 
    // Render the application routes
    return (
-     <Router>
-       <Navbar user={user} onLogout={handleLogout} />
-       <main className="container">
-         <Routes>
-           {/* Public Routes (accessible only when logged out) */}
-           <Route path="/login" element={
-             <PublicRoute isAuth={!!user}>
-               <LoginPage onLoginSuccess={handleLoginSuccess} />
-             </PublicRoute>
-           }/>
-           <Route path="/register" element={
-             <PublicRoute isAuth={!!user}>
-               <RegisterPage />
-             </PublicRoute>
-            }/>
+    <Router>
+      <Navbar user={user} onLogout={handleLogout} />
+      {/* Use <main> tag, but don't apply .container globally here */}
+      <main>
+        <Routes>
+          {/* === Route for HomePage (No Container Here) === */}
+          <Route path="/" element={<HomePage />} />
 
-           {/* Protected Routes (accessible only when logged in) */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute isAuth={!!user}>
-                <DashboardPage user={user}/>
-              </ProtectedRoute>
-            }/>
-            <Route path="/add-application" element={
-              <ProtectedRoute isAuth={!!user}>
-                <ApplicationFormPage />
-              </ProtectedRoute>
-            }/>
-            <Route path="/edit-application/:id" element={
-              <ProtectedRoute isAuth={!!user}>
-                <ApplicationFormPage /> {/* Reuse form for editing */}
-              </ProtectedRoute>
-            }/>
-            <Route path="/application/:id" element={
-              <ProtectedRoute isAuth={!!user}>
-                <ApplicationDetailPage />
-              </ProtectedRoute>
-            }/>
+          {/* === Other Routes (Wrapped in Container) === */}
+          <Route path="/login" element={ <PublicRoute isAuth={!!user}> <div className="container"><LoginPage onLoginSuccess={handleLoginSuccess} /></div> </PublicRoute> }/>
+          <Route path="/register" element={ <PublicRoute isAuth={!!user}> <div className="container"><RegisterPage /></div> </PublicRoute> }/>
+          <Route path="/dashboard" element={ <ProtectedRoute isAuth={!!user}> <div className="container"><DashboardPage user={user}/></div> </ProtectedRoute> }/>
+          <Route path="/add-application" element={ <ProtectedRoute isAuth={!!user}> <div className="container"><ApplicationFormPage /></div> </ProtectedRoute> }/>
+          <Route path="/edit-application/:id" element={ <ProtectedRoute isAuth={!!user}> <div className="container"><ApplicationFormPage /></div> </ProtectedRoute> }/>
+          <Route path="/application/:id" element={ <ProtectedRoute isAuth={!!user}> <div className="container"><ApplicationDetailPage /></div> </ProtectedRoute> }/>
+          <Route path="*" element={ <div className="container"><NotFoundPage /></div> } />
 
-            {/* Redirect root path */}
-            <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
+        </Routes>
+      </main>
+    </Router>
+  );
+}
 
-            {/* Not Found Route */}
-            <Route path="*" element={<NotFoundPage />} />
-         </Routes>
-       </main>
-     </Router>
-   );
- }
-
- export default App;
+export default App;
